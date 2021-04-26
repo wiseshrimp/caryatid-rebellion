@@ -1,0 +1,72 @@
+{
+
+"images": [
+    "./sprites/card22/card22-0.png",
+    "./sprites/card22/card22-1.png",
+    "./sprites/card22/card22-2.png",
+    "./sprites/card22/card22-3.png",
+    "./sprites/card22/card22-4.png",
+    "./sprites/card22/card22-5.png"
+],
+
+"framerate": 20,
+"frames": [
+    [0, 0, 1440, 480, 0, 0, 0],
+    [0, 480, 1440, 480, 0, 0, 0],
+    [0, 960, 1440, 480, 0, 0, 0],
+    [0, 1440, 1440, 480, 0, 0, 0],
+    [0, 0, 1440, 480, 1, 0, 0],
+    [0, 480, 1440, 480, 1, 0, 0],
+    [0, 960, 1440, 480, 1, 0, 0],
+    [0, 1440, 1440, 480, 1, 0, 0],
+    [0, 0, 1440, 480, 2, 0, 0],
+    [0, 480, 1440, 480, 2, 0, 0],
+    [0, 960, 1440, 480, 2, 0, 0],
+    [0, 1440, 1440, 480, 2, 0, 0],
+    [0, 0, 1440, 480, 3, 0, 0],
+    [0, 480, 1440, 480, 3, 0, 0],
+    [0, 960, 1440, 480, 3, 0, 0],
+    [0, 1440, 1440, 480, 3, 0, 0],
+    [0, 0, 1440, 480, 4, 0, 0],
+    [0, 480, 1440, 480, 4, 0, 0],
+    [0, 960, 1440, 480, 4, 0, 0],
+    [0, 1440, 1440, 480, 4, 0, 0],
+    [0, 0, 1440, 480, 5, 0, 0],
+    [0, 480, 1440, 480, 5, 0, 0],
+    [0, 960, 1440, 480, 5, 0, 0],
+    [0, 1440, 1440, 480, 5, 0, 0]
+],
+
+"animations": {
+    "Strip2200": { "frames": [0] },
+    "Strip2201": { "frames": [1] },
+    "Strip2202": { "frames": [2] },
+    "Strip2203": { "frames": [3] },
+    "Strip2204": { "frames": [4] },
+    "Strip2205": { "frames": [5] },
+    "Strip2206": { "frames": [6] },
+    "Strip2207": { "frames": [7] },
+    "Strip2208": { "frames": [8] },
+    "Strip2209": { "frames": [9] },
+    "Strip2210": { "frames": [10] },
+    "Strip2211": { "frames": [11] },
+    "Strip2212": { "frames": [12] },
+    "Strip2213": { "frames": [13] },
+    "Strip2214": { "frames": [14] },
+    "Strip2215": { "frames": [15] },
+    "Strip2216": { "frames": [16] },
+    "Strip2217": { "frames": [17] },
+    "Strip2218": { "frames": [18] },
+    "Strip2219": { "frames": [19] },
+    "Strip2220": { "frames": [20] },
+    "Strip2221": { "frames": [21] },
+    "Strip2222": { "frames": [22] },
+    "Strip2223": { "frames": [23] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:d73a425e25c7d491ccbfa803e9d8559d:aae2835a7dd41f2d914a8c5305a0eceb:d1453e720dba5347883f912eee750056$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}
