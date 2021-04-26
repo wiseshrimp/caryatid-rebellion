@@ -62,15 +62,16 @@ export default class Sprite extends React.Component {
         }
     }
 
-    componentDidMount() {
-        this.load()
-    }
-
     componentDidUpdate = prevProps => {
         if (prevProps.y !== this.props.y) {
             // Check if out of bounds
             this.checkBounds()
         }
+
+        if (!prevProps.queue && this.props.queue) {
+            this.load()
+        }
+
         if (!prevProps.popup && this.props.popup && this.state.isPlaying) {
             this.stop()
         }
@@ -88,21 +89,25 @@ export default class Sprite extends React.Component {
     }
 
     handleLoad = sprite => {
-        this.spriteEl = new createjs.Sprite(sprite.result, this.id)
-        this.props.handleLoad(this.props.id, 'sprites')
-        this.add()
+        if (sprite.item.id === this.props.id) {
+            this.spriteEl = new createjs.Sprite(sprite.result, this.id)
+            this.props.handleLoad(this.props.id, 'sprites')
+            this.add()
+        }
+
+        // this.add()
     }
 
     load = () => {
-        let loader = new createjs.LoadQueue(false)
         let manifest = {
             src: this.props.src,
             id: this.props.id,
             type: 'spritesheet',
             crossOrigin: true
         }
-        loader.loadManifest(manifest, true)
-        loader.on("fileload", this.handleLoad)
+        console.log(this.props.queue)
+        this.props.queue.loadManifest(manifest, true)
+        this.props.queue.on("fileload", this.handleLoad)
     }
 
     onClick = ev => {

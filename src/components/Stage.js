@@ -22,7 +22,8 @@ class Stage extends React.Component {
       y: 0,
       popup: null,
       lowerBound: 0,
-      loadedElements: 0
+      loadedElements: 0,
+      loaded: {sprites: 0, placards: 0}
     }
   }
 
@@ -30,6 +31,13 @@ class Stage extends React.Component {
     this.setup()
     this.addEventListeners()
     this.changeBackground()
+  }
+
+  componentWillUnmount = () => {
+    document.removeEventListener('mousewheel', this.scroll)
+    document.removeEventListener('DOMMouseScroll', this.scroll)
+    window.removeEventListener('resize', this.resize)
+    clearInterval(this.changeHue)
   }
 
   addEventListeners = () => {
@@ -59,7 +67,7 @@ class Stage extends React.Component {
         document.body.style.background = 'linear-gradient(to right, hsl(' + col1 + ',70%, 75%) 0%,hsl(' + col2 + ',90%,75%) 100%)'
     }
 
-    setInterval(changeHue, 64)
+    this.changeHue = setInterval(changeHue, 64)
   }
 
   draw = () => {
@@ -68,10 +76,13 @@ class Stage extends React.Component {
 
   onLoad = () => {
     let hasLoaded = this.state.loadedElements + 1 === TOTAL_ASSETS
+
     this.setState({
       loadedElements: this.state.loadedElements + 1,
-      hasLoaded
+      hasLoaded,
+      // loaded: Object.assign({}, {[type]: [...this.state.loaded[type], id]}, this.state.loaded)
     })
+
     if (hasLoaded) {
       this.calculateLowerBound()
     }
@@ -127,6 +138,10 @@ class Stage extends React.Component {
     createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED
     createjs.Ticker.framerate = FRAMERATE
     createjs.Ticker.on('tick', this.draw)
+    
+    this.queue = new createjs.LoadQueue(true)
+    this.queue.maintainScriptOrder = true
+
     this.stage.enableMouseOver(20)
   }
 
@@ -164,9 +179,11 @@ class Stage extends React.Component {
       stage={this.stage}
       handleLoad={this.onLoad}
       setTransform={this.setTransform}
+      queue={this.queue}
       src={src}
       y={this.state.y}
       popup={this.state.popup}
+      loaded={this.state.loaded}
      />
   }
 
