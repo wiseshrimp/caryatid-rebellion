@@ -20,6 +20,8 @@ class Stage extends React.Component {
       hasLoaded: false,
       hasScrolled: false,
       y: 0,
+      startY: 0,
+      isTouchDevice: false,
       popup: null,
       lowerBound: 0,
       loadedElements: 0,
@@ -28,6 +30,9 @@ class Stage extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({
+      isTouchDevice: this.isTouchDevice()
+    })
     this.setup()
     this.addEventListeners()
     this.changeBackground()
@@ -43,6 +48,10 @@ class Stage extends React.Component {
   addEventListeners = () => {
     document.addEventListener('mousewheel', this.scroll)
     document.addEventListener('DOMMouseScroll', this.scroll)
+    if (this.isTouchDevice()) {
+      document.body.addEventListener('touchstart', this.onTouchStart)
+      document.body.addEventListener('touchmove', this.scroll)
+    }
     window.addEventListener('resize', this.resize)
   }
 
@@ -74,6 +83,12 @@ class Stage extends React.Component {
     this.stage.update()
   }
 
+  isTouchDevice = () => {
+    return (('ontouchstart' in window) ||
+      (navigator.maxTouchPoints > 0) ||
+      (navigator.msMaxTouchPoints > 0))
+  }
+
   onLoad = () => {
     let hasLoaded = this.state.loadedElements + 1 === TOTAL_ASSETS
 
@@ -88,10 +103,16 @@ class Stage extends React.Component {
     }
   }
 
+  onTouchStart = ev => {
+    this.setState({
+      startY: ev.touches[0].pageY
+    })
+  }
+
   scroll = ev => {
     if (this.state.popup) return
 
-    let y = this.state.y - ev.deltaY / 2
+    let y = this.state.isTouchDevice ?  this.state.y - (this.state.startY - ev.touches[0].pageY) * .05 : this.state.y - ev.deltaY / 2
     if (Math.abs(y) > window.innerHeight && !this.state.areButtonsShowing) {
       this.setState({
         areButtonsShowing: true
@@ -118,7 +139,7 @@ class Stage extends React.Component {
 
     createjs.Tween.get(this.stage, {override: true}).to({
         y
-    }, 300)
+    }, 1000)
   }
 
   setTransform = (spriteTransform, type) => {
@@ -131,6 +152,7 @@ class Stage extends React.Component {
     this.stage = new createjs.Stage('canvas')
     let ctx = this.stage.canvas.getContext('2d')
     ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = true
+    createjs.Touch.enable(this.stage)
 
     this.resize()
 
