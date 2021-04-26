@@ -5,7 +5,9 @@ import Landing from './Landing'
 import Placard from './Placard'
 import Sprite from './Sprite'
 import Still from './Still'
-import {FRAMERATE, SPRITE_SHEETS, TOTAL_ASSETS, MARGIN, STILLS, PLACARDS} from '../utils/constants'
+import Buttons from './Buttons'
+import {FRAMERATE, SPRITE_SHEETS, TOTAL_ASSETS, MARGIN, STILLS, PLACARDS, POPUPS} from '../constants/constants'
+import Popup from './Popup'
 
 window.createjs = createjs
 
@@ -18,6 +20,7 @@ class Stage extends React.Component {
       hasLoaded: false,
       hasScrolled: false,
       y: 0,
+      popup: null,
       lowerBound: 0,
       loadedElements: 0
     }
@@ -39,7 +42,7 @@ class Stage extends React.Component {
     let numOfSprites = SPRITE_SHEETS.length + STILLS.length
     let numOfPlacards = PLACARDS.length
     let lowerBound = numOfSprites * this.state.assetTransform.sprites.h + numOfPlacards * this.state.assetTransform.placards.h
-    lowerBound += TOTAL_ASSETS * MARGIN.y * 2
+    lowerBound += TOTAL_ASSETS * MARGIN.y * 2 + MARGIN.y * 4
     this.setState({
       lowerBound
     })
@@ -75,11 +78,18 @@ class Stage extends React.Component {
   }
 
   scroll = ev => {
+    if (this.state.popup) return
+
     let y = this.state.y - ev.deltaY / 2
-    if (Math.abs(y) > window.innerHeight && !this.areButtonsShowing) {
-      // Show buttons
-    } else if (Math.abs(this.state.y) < window.innerHeight && this.areButtonsShowing) {
+    if (Math.abs(y) > window.innerHeight && !this.state.areButtonsShowing) {
+      this.setState({
+        areButtonsShowing: true
+      })
+    } else if (Math.abs(this.state.y) < window.innerHeight && this.state.areButtonsShowing) {
       // Hide buttons
+      this.setState({
+        areButtonsShowing: false
+      })
     }
 
     if (y > 0) {
@@ -140,6 +150,13 @@ class Stage extends React.Component {
     />
   }
 
+  renderPopup = () => (
+    <Popup
+      setPopup={this.setPopup}
+      which={this.state.popup}
+    />
+  )
+
   renderSprite = ({id, src}) => {
     return <Sprite 
       key={id}
@@ -149,6 +166,7 @@ class Stage extends React.Component {
       setTransform={this.setTransform}
       src={src}
       y={this.state.y}
+      popup={this.state.popup}
      />
   }
 
@@ -171,7 +189,6 @@ class Stage extends React.Component {
 
     if (this.state.hasLoaded) {
         this.calculateLowerBound()
-        // this.landing.resize()
 
         let deltaY = this.state.y - currentPos * this.state.lowerBound
         let y = this.state.y - deltaY
@@ -192,10 +209,23 @@ class Stage extends React.Component {
     }
   }
 
+  setPopup = popup => {
+    let areButtonsShowing = !popup
+    this.setState({
+      popup,
+      areButtonsShowing
+    })
+  }
+
   render() {
     return (
       <div>
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" className={`${this.state.popup ? 'blurred' : ''}`}></canvas>
+        <Buttons
+          showButtons={this.state.areButtonsShowing}
+          setPopup={this.setPopup}
+        />
+        {this.state.popup ? this.renderPopup() : null}
         {this.renderLanding()}
         {SPRITE_SHEETS.map(this.renderSprite)}
         {STILLS.map(this.renderStill)}

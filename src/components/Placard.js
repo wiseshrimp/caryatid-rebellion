@@ -1,6 +1,6 @@
 import React from 'react'
 import createjs from 'createjs-module'
-import { PLACARDS, FIRST_PLACARD, MARGIN } from '../utils/constants'
+import { PLACARDS, FIRST_PLACARD, MARGIN } from '../constants/constants'
 
 export default class Placard extends React.Component {
     constructor(props) {
@@ -19,8 +19,13 @@ export default class Placard extends React.Component {
 
     add = () => {
         this.transform()
+        this.addEventListener()
         this.props.stage.addChild(this.spriteEl)
         this.play()
+    }
+
+    addEventListener = () => {
+        window.addEventListener('resize', this.transform)
     }
 
     componentDidMount() {

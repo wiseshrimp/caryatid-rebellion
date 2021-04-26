@@ -6,7 +6,10 @@ canvas {
 
 body {
     margin: 0;
-    overflow: hidden;
+    overflow: hidden
+}
+
+#root > div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,30 +24,32 @@ body {
     color: black;
     font-size: 45px;
     font-family: 'custard', Arial, Helvetica, sans-serif;
-    pointer-events: none;
     transition: all .5s ease-in-out;
 }
 
 .buttons-container {
     top: 0px;
+    left: 0px;
 }
 
 .bottom-button-container {
     bottom: 0px;
+    left: 0px;
 }
 
-.buttons-container.visible, .bottom-button-container.visible {
-    display: flex;
-    animation: fadeIn .25s ease-in-out;
-    animation-fill-mode: forwards;
+.buttons {
+    transition: all .5s ease-in-out;
+    opacity: 0;
+    z-index: 1;
+}
+
+.buttons.visible {
+    opacity: 1;
     pointer-events: all;
 }
-
-.buttons-container.hidden, .bottom-button-container.hidden {
-    animation: fadeIn .25s ease-in-out reverse;
-    animation-fill-mode: forwards;
+.buttons.hidden {
+    opacity: 0;
     pointer-events: none;
-    display: none;
 }
 
 .button {
@@ -152,6 +157,7 @@ body {
 }
 
 h1 {
+    font-family: 'custard', Arial, Helvetica, sans-serif;
     font-size: 30px;
     text-align: center;
 }

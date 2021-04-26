@@ -15,6 +15,11 @@ export default class Landing extends React.Component {
         this.createTitle()
         this.createInstructions()
         this.add()
+        this.addEventListener()
+    }
+
+    addEventListener = () => {
+        window.addEventListener('resize', this.resize)
     }
 
     componentDidUpdate = prevProps => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import createjs from 'createjs-module'
 
-import {FIRST_SPRITE, MARGIN, PLACARDS} from '../utils/constants'
+import {FIRST_SPRITE, MARGIN, PLACARDS} from '../constants/constants'
 
 export default class Sprite extends React.Component {
     constructor(props) {
@@ -21,12 +21,13 @@ export default class Sprite extends React.Component {
     add = () => {
         this.transform()
         this.stop()
-        this.addEventListener()
+        this.addEventListeners()
         this.props.stage.addChild(this.spriteEl)
     }
 
-    addEventListener = () => {
+    addEventListeners = () => {
         this.spriteEl.addEventListener('click', this.onClick)
+        window.addEventListener('resize', this.transform)
     }
 
     calculateYOffset = height => {
@@ -70,6 +71,9 @@ export default class Sprite extends React.Component {
             // Check if out of bounds
             this.checkBounds()
         }
+        if (!prevProps.popup && this.props.popup && this.state.isPlaying) {
+            this.stop()
+        }
     }
 
     check = () => {
@@ -98,7 +102,6 @@ export default class Sprite extends React.Component {
             crossOrigin: true
         }
         loader.loadManifest(manifest, true)
-        console.log(loader)
         loader.on("fileload", this.handleLoad)
     }
 

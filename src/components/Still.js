@@ -1,6 +1,6 @@
 import React from 'react'
 import createjs from 'createjs-module'
-import {PLACARDS, MARGIN} from '../utils/constants'
+import {PLACARDS, MARGIN} from '../constants/constants'
 
 export default class Still extends React.Component {
     constructor(props) {
@@ -15,6 +15,10 @@ export default class Still extends React.Component {
                 h: 0
             }
         }
+    }
+
+    addEventListener = () => {
+        window.addEventListener('resize', this.transform)
     }
 
     add = () => {
@@ -41,6 +45,7 @@ export default class Still extends React.Component {
         this.stillEl = new createjs.Bitmap(data.target, this.props.id)
         this.props.handleLoad(this.props.id, 'stills')
         this.add()
+        this.addEventListener()
     }
 
     load = () => {
