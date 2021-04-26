@@ -1,4 +1,3 @@
-import '../App.css'
 import React from 'react'
 import createjs from 'createjs-module'
 
@@ -109,7 +108,6 @@ class Stage extends React.Component {
 
   setup = () => {
     this.stage = new createjs.Stage('canvas')
-    console.log(this.stage)
     let ctx = this.stage.canvas.getContext('2d')
     ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = true
 

@@ -1,6 +1,7 @@
+import './css/style.css'
+import './css/media.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
 import Stage from './components/Stage'
 import reportWebVitals from './reportWebVitals'
 

@@ -120,7 +120,7 @@ body {
 .close {
     height: 30px;
     width: 30px;
-    background-image: url('../../assets/ui/close.png');
+    background-image: url('../assets/ui/close.png');
     background-size: contain;
     background-repeat: no-repeat;
     cursor: pointer;

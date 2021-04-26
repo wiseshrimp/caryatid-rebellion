@@ -98,6 +98,7 @@ export default class Sprite extends React.Component {
             crossOrigin: true
         }
         loader.loadManifest(manifest, true)
+        console.log(loader)
         loader.on("fileload", this.handleLoad)
     }
 
