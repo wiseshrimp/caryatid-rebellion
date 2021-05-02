@@ -42,6 +42,7 @@ export default class Sprite extends React.Component {
     }
 
     checkBounds = () => {
+        // if (this.props.currentSprite) return
         let {transform} = this.state
         let isHeightBiggerThanScreen = transform.h > this.props.stage.canvas.height
         if (this.state.isPlaying) {
@@ -53,7 +54,7 @@ export default class Sprite extends React.Component {
                 this.stop()
             }
         } else {
-            if (!transform || this.state.hasPlayed) return
+            if (!transform || this.state.hasPlayed || this.props.currentSprite) return
             if (isHeightBiggerThanScreen && -this.props.y < transform.y && -this.props.y > transform.y + transform.h) {
                 this.play()
             } else if (transform.y > -this.props.y && transform.y + transform.h < -this.props.y + this.props.stage.canvas.height) {
@@ -63,10 +64,6 @@ export default class Sprite extends React.Component {
     }
 
     componentDidUpdate = prevProps => {
-        if (prevProps.y !== this.props.y) {
-            // Check if out of bounds
-            this.checkBounds()
-        }
 
         if (!prevProps.queue && this.props.queue) {
             this.load()
@@ -74,6 +71,11 @@ export default class Sprite extends React.Component {
 
         if (!prevProps.popup && this.props.popup && this.state.isPlaying) {
             this.stop()
+        }
+
+        if (prevProps.y !== this.props.y) {
+            // Check if out of bounds
+            this.checkBounds()
         }
     }
 
@@ -84,7 +86,7 @@ export default class Sprite extends React.Component {
             this.setState({
                 hasPlayed: true
             })
-            createjs.Ticker.off('tick', this.check)
+            createjs.Ticker.removeEventListener('tick', this.check)
         }
     }
 
@@ -105,19 +107,23 @@ export default class Sprite extends React.Component {
             type: 'spritesheet',
             crossOrigin: true
         }
-        console.log(this.props.queue)
         this.props.queue.loadManifest(manifest, true)
         this.props.queue.on("fileload", this.handleLoad)
     }
 
     onClick = ev => {
+        if (!this.spriteEl) return
         if (this.state.hasPlayed) {
-            this.play()
+            this.play(true)
             // this.props.changeCurrent(this.id, true)
         }
     }
 
-    play = () => {
+    play = force => {
+        if (!this.spriteEl) return
+        if (this.props.currentSprite && this.props.currentSprite !== this.props.id) return
+        if (this.props.currentSprite && !force) return
+
         if (this.state.hasPlayed) {
             this.spriteEl.gotoAndPlay(0)
             this.setState({
@@ -128,11 +134,16 @@ export default class Sprite extends React.Component {
                 isPlaying: true
             })
             this.spriteEl.play()
-            createjs.Ticker.on('tick', this.check)
+            createjs.Ticker.addEventListener('tick', this.check)
         }
+
+        this.props.setCurrentSprite(this.props.id)
     }
 
-    stop = () => {
+    stop = force => {
+        if (!force) {
+            this.props.setCurrentSprite(null)
+        }
         this.spriteEl.stop()
         this.setState({
             isPlaying: false

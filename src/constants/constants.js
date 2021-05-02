@@ -79,6 +79,10 @@ const SPRITE_SHEETS = [
     {
         id: 'CARD_36',
         src: './sprites/card37/card37.json'
+    },
+    {
+        id: 'CARD_37',
+        src: './sprites/card38/card38.json'
     }
 ]
 
@@ -178,11 +182,16 @@ const PLACARDS = [
     }
 ]
 
-// const OVERLAYS = {
-//     COLUMN1: {
-//         src: './overlays/Column_Warped2.png'
-//     }
-// }
+const ORIGINAL_SIZE = {
+    STILLS: {
+        h: 480,
+        w: 1440
+    },
+    STAGE: {
+        w: 640,
+        h: 480
+    }
+}
 
 const MARGIN = {
     x: 20,
@@ -204,4 +213,4 @@ const TOTAL_ASSETS = SPRITE_SHEETS.length + PLACARDS.length + STILLS.length
 const FIRST_SPRITE = 'CARD_1'
 const FIRST_PLACARD = 'PLACARD_1'
 
-export {POPUPS, FIRST_SPRITE, FIRST_PLACARD, FRAMERATE, MARGIN, PLACARDS, STILLS, SPRITE_SHEETS, TYPES, TOTAL_ASSETS}
+export {ORIGINAL_SIZE, POPUPS, FIRST_SPRITE, FIRST_PLACARD, FRAMERATE, MARGIN, PLACARDS, STILLS, SPRITE_SHEETS, TYPES, TOTAL_ASSETS}

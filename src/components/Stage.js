@@ -9,6 +9,8 @@ import Buttons from './Buttons'
 import {FRAMERATE, SPRITE_SHEETS, TOTAL_ASSETS, MARGIN, STILLS, PLACARDS, POPUPS} from '../constants/constants'
 import Popup from './Popup'
 
+import {isTouchDevice} from '../utils/utils'
+
 window.createjs = createjs
 
 class Stage extends React.Component {
@@ -17,10 +19,11 @@ class Stage extends React.Component {
     this.state = {
       areButtonsShowing: false,
       assetTransform: {sprites: {}, placards: {}},
+      currentSprite: null,
       hasLoaded: false,
       hasScrolled: false,
       y: 0,
-      startY: 0,
+      mouseY: 0,
       isTouchDevice: false,
       popup: null,
       lowerBound: 0,
@@ -46,11 +49,11 @@ class Stage extends React.Component {
   }
 
   addEventListeners = () => {
-    document.addEventListener('mousewheel', this.scroll)
-    document.addEventListener('DOMMouseScroll', this.scroll)
-    if (this.isTouchDevice()) {
-      document.body.addEventListener('touchstart', this.onTouchStart)
-      document.body.addEventListener('touchmove', this.scroll)
+    document.addEventListener('mousewheel', this.onScroll)
+    document.addEventListener('DOMMouseScroll', this.onScroll)
+    if (isTouchDevice()) {
+      document.getElementById('canvas').addEventListener('touchend', this.onMouseUp)
+      document.getElementById('canvas').addEventListener('touchstart', this.onMouseDown)  
     }
     window.addEventListener('resize', this.resize)
   }
@@ -63,6 +66,7 @@ class Stage extends React.Component {
     this.setState({
       lowerBound
     })
+    return lowerBound
   }
 
   changeBackground = () => {
@@ -103,16 +107,31 @@ class Stage extends React.Component {
     }
   }
 
-  onTouchStart = ev => {
+  onMouseDown = ev => {
     this.setState({
-      startY: ev.touches[0].pageY
+      mouseY: ev.pageY
     })
+
+    document.getElementById('canvas').addEventListener('touchmove', this.onMouseMove)
+
   }
 
-  scroll = ev => {
+  onMouseMove = ev => {
+    this.scroll(this.state.y + (ev.pageY - this.state.mouseY) / 40)
+  }
+
+  onMouseUp = ev => {
+    document.getElementById('canvas').removeEventListener('touchmove', this.onMouseMove)
+  }
+
+  onScroll = ev => {
+    let y  = this.state.y - ev.deltaY
+    this.scroll(y)
+  }
+
+  scroll = y => {
     if (this.state.popup) return
 
-    let y = this.state.isTouchDevice ?  this.state.y - (this.state.startY - ev.touches[0].pageY) * .05 : this.state.y - ev.deltaY / 2
     if (Math.abs(y) > window.innerHeight && !this.state.areButtonsShowing) {
       this.setState({
         areButtonsShowing: true
@@ -139,7 +158,13 @@ class Stage extends React.Component {
 
     createjs.Tween.get(this.stage, {override: true}).to({
         y
-    }, 1000)
+    }, 100, createjs.Ease.sineOut)
+  }
+
+  setCurrentSprite = currentSprite => {
+    this.setState({
+      currentSprite
+    })
   }
 
   setTransform = (spriteTransform, type) => {
@@ -151,7 +176,7 @@ class Stage extends React.Component {
   setup = () => {
     this.stage = new createjs.Stage('canvas')
     let ctx = this.stage.canvas.getContext('2d')
-    ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = true
+    ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = ctx.imageSmoothingEnabled = true
     createjs.Touch.enable(this.stage)
 
     this.resize()
@@ -206,6 +231,8 @@ class Stage extends React.Component {
       y={this.state.y}
       popup={this.state.popup}
       loaded={this.state.loaded}
+      setCurrentSprite={this.setCurrentSprite}
+      currentSprite={this.state.currentSprite}
      />
   }
 
@@ -216,7 +243,7 @@ class Stage extends React.Component {
       stage={this.stage}
       handleLoad={this.onLoad}
       src={src}
-     />
+     /> 
     )
 
   resize = () => {
@@ -227,24 +254,11 @@ class Stage extends React.Component {
     this.stage.scaleY = window.innerHeight / this.stage.canvas.height
 
     if (this.state.hasLoaded) {
-        this.calculateLowerBound()
-
-        let deltaY = this.state.y - currentPos * this.state.lowerBound
-        let y = this.state.y - deltaY
-
-        if (y > this.lowerBound) {
-            y = -this.lowerBound
-        }
-
-        createjs.Tween.get(this.stage).to({
-          y
-        }, 200)
-
-        this.setState({
-          y
-        })
-
-        this.stage.update()
+      setTimeout(() => {
+        let lowerBound = this.calculateLowerBound()
+        let y = currentPos * lowerBound
+        this.scroll(y)
+      }, 100)
     }
   }
 
@@ -259,7 +273,11 @@ class Stage extends React.Component {
   render() {
     return (
       <div>
-        <canvas id="canvas" className={`${this.state.popup ? 'blurred' : ''}`}></canvas>
+        <canvas 
+          id="canvas" 
+          className={`${this.state.popup ? 'blurred' : ''}`}
+          width="640"
+          height="480"></canvas>
         <Buttons
           showButtons={this.state.areButtonsShowing}
           setPopup={this.setPopup}
