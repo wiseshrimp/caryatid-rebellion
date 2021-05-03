@@ -91,6 +91,10 @@ const SPRITE_SHEETS = [
     {
         id: 'CARD_40',
         src: './sprites/card41/card41.json'
+    },
+    {
+        id: 'CARD_41',
+        src: './sprites/card42/card42.json'
     }
 ]
 
