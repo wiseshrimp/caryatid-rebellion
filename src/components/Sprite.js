@@ -115,14 +115,11 @@ export default class Sprite extends React.Component {
         if (!this.spriteEl) return
         if (this.state.hasPlayed) {
             this.play(true)
-            // this.props.changeCurrent(this.id, true)
         }
     }
 
     play = force => {
         if (!this.spriteEl) return
-        if (this.props.currentSprite && this.props.currentSprite !== this.props.id) return
-        if (this.props.currentSprite && !force) return
 
         if (this.state.hasPlayed) {
             this.spriteEl.gotoAndPlay(0)
@@ -134,9 +131,8 @@ export default class Sprite extends React.Component {
                 isPlaying: true
             })
             this.spriteEl.play()
-            createjs.Ticker.addEventListener('tick', this.check)
         }
-
+        createjs.Ticker.addEventListener('tick', this.check)
         this.props.setCurrentSprite(this.props.id)
     }
 
