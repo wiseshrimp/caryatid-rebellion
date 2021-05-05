@@ -171,6 +171,10 @@ const STILLS = [
     {
         id: 'CARD_39',
         src: './stills/Still40.png'
+    },
+    {
+        id: 'CARD_42',
+        src: './stills/Still43.png'
     }
 ]
 
