@@ -17,13 +17,27 @@ export default class Still extends React.Component {
         }
     }
 
+    debounce = function(func, wait = 100) {
+        let timeout;
+        return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            func.apply(this, args);
+          }, wait);
+        };
+      }
+
     addEventListener = () => {
-        window.addEventListener('resize', this.transform)
+        // It is a good practice to have resize callbacks debounced. It is not a huge issue here but since there are calculations in the transform function, 
+        // not debouncing the function might fill the browser memmory since it will fire constantly until the resize stops
+        window.addEventListener('resize', this.debounce(this.transform, 100))
     }
 
     add = () => {
+        const { stage } = this.props
+
         this.transform()
-        this.props.stage.addChild(this.stillEl)
+        stage.addChild(this.stillEl)
     }
 
     calculateYOffset = height => {
@@ -42,8 +56,9 @@ export default class Still extends React.Component {
     }
 
     handleLoad = data => {
-        this.stillEl = new createjs.Bitmap(data.target, this.props.id)
-        this.props.handleLoad(this.props.id, 'stills')
+        const { handleLoad, id } = this.props
+        this.stillEl = new createjs.Bitmap(data.target, id)
+        handleLoad(id, 'stills')
         this.add()
         this.addEventListener()
     }
@@ -55,20 +70,21 @@ export default class Still extends React.Component {
     }
 
     transform = () => {
-        let {innerWidth, innerHeight} = window
-        let margin = window.innerWidth / 10 < MARGIN.x ? MARGIN.x : window.innerWidth / 10
+        const { idx } = this.state
+        const { stage } = this.props
+        let margin = stage.canvas.width / 10 < MARGIN.x ? MARGIN.x : stage.canvas.width / 10
         let transform = {x: 0, y: 0, w: 0, h: 0}
         let rectWidth = 1440
         let rectHeight = 480
-        let toResize = rectWidth + MARGIN.y * 2 > innerWidth
-        let isScreenSmall = window.innerWidth <= 600
+        let toResize = rectWidth + MARGIN.y * 2 > stage.canvas.width
+        let isScreenSmall = stage.canvas.width <= 600
 
-        transform.w = toResize ? innerWidth - margin : rectWidth
-        transform.w = isScreenSmall ? innerWidth : transform.w
+        transform.w = toResize ? stage.canvas.width - margin : rectWidth
+        transform.w = isScreenSmall ? stage.canvas.width : transform.w
         transform.h = (rectHeight / rectWidth) * transform.w
-        transform.x = (innerWidth - transform.w) / 2
+        transform.x = (stage.canvas.width - transform.w) / 2
         transform.x = isScreenSmall ? 0 : transform.x
-        transform.y = innerHeight + transform.h * this.state.idx + MARGIN.y * 2 * (this.state.idx + 1)
+        transform.y = stage.canvas.height + transform.h * idx + MARGIN.y * 2 * (idx + 1)
         transform.y += this.calculateYOffset(transform.h)
         let scale = transform.w / rectWidth
         this.stillEl.scaleX = scale

@@ -23,56 +23,64 @@ export default class Landing extends React.Component {
     }
 
     componentDidUpdate = prevProps => {
-        if (this.props.stage && !this.state.hasAddedToStage) {
+        const { hasAddedToStage } = this.state
+        const { stage, hasScrolled, loadedPercentage } = this.props
+        if (stage && !hasAddedToStage) {
             this.create()
             this.setState({
                 hasAddedToStage: true
             })
         }
-        if (!prevProps.hasScrolled && this.props.hasScrolled) {
+        if (!prevProps.hasScrolled && hasScrolled) {
             this.addClickInstructions()
         }
-        if (this.props.loadedPercentage !== prevProps.loadedPercentage) {
+        if (loadedPercentage !== prevProps.loadedPercentage) {
             this.addLoading()
         }
     }
 
     add = () => {
-        this.props.stage.addChild(this.container)
+        const { stage } = this.props
+
+        stage.addChild(this.container)
     }
 
     addArrow = () => {
-        let width = window.innerWidth / 15
+        const { stage } = this.props
+        let width = stage.canvas.width / 15
         this.arrowEl.setTransform(
-            this.props.stage.canvas.width / 2 - width / 2, 
-            window.innerHeight / 4 + this.props.stage.canvas.height / 2 + 10,
+            stage.canvas.width / 2 - width / 2, 
+            stage.canvas.height / 4 + stage.canvas.height / 2 + 10,
             width / this.arrowEl.image.width,
             width / this.arrowEl.image.width
         )
 
-        this.arrowY = window.innerHeight / 4 + this.props.stage.canvas.height / 2 + 10
+        this.arrowY = stage.canvas.height / 4 + stage.canvas.height / 2 + 10
         this.container.addChild(this.arrowEl)
         this.animateArrow()
     }
 
     addClickInstructions = () => {
-        let arrowHeight = window.innerWidth / 15 + 10
-        let fontSize = window.innerHeight / 20
-        let y = window.innerHeight / 4 + this.props.stage.canvas.height / 2 + 20 + arrowHeight
+        const { stage } = this.props
+        let arrowHeight = stage.canvas.width / 15 + 10
+        let fontSize = stage.canvas.height / 20
+        let y = stage.canvas.height / 4 + stage.canvas.height / 2 + 20 + arrowHeight
         let text = new createjs.Text().set({
             text: 'CLICK TO REPLAY COMICS',
             x: 0,
             y,
             font: `${fontSize}px custard, sans-serif`,
-            lineWidth: window.innerWidth - 30
+            lineWidth: stage.canvas.width - 30
         })
         this.container.addChild(text)
-        text.x = this.props.stage.canvas.width / 2
+        text.x = stage.canvas.width / 2
         text.textAlign = 'center'
     }
 
     addLoading = () => {
-        let scaleX = this.props.loadedPercentage
+        const { loadedPercentage } = this.props
+
+        let scaleX = loadedPercentage
         if (scaleX >= 1) {
             this.container.removeChild(this.fill)
             this.container.removeChild(this.bar)
@@ -101,9 +109,11 @@ export default class Landing extends React.Component {
     }
 
     createContainer = () => {
+        const { stage } = this.props
+
         let container = new createjs.Container()
         this.container = container
-        container.setBounds(0, 0, window.innerWidth, window.innerHeight)
+        container.setBounds(0, 0, stage.canvas.width, stage.canvas.height)
         if (!this.props.hasLoaded) {
             let {bar, fill} = this.createLoadingBar()
             container.addChild(bar)
@@ -112,37 +122,41 @@ export default class Landing extends React.Component {
             this.bar = bar
         }
         this.setState({
-            scale: {x: window.innerWidth, y: window.innerHeight}
+            scale: {x: stage.canvas.width, y: stage.canvas.height}
         })
     }
 
     createInstructions = () => {
-        let fontSize = window.innerHeight / 20
+        const { stage } = this.props
+
+        let fontSize = stage.canvas.height / 20
         let text = new createjs.Text().set({
             text: 'SCROLL',
             x: 0,
-            y: window.innerHeight / 5 + this.props.stage.canvas.height / 2,
+            y: stage.canvas.height / 5 + stage.canvas.height / 2,
             font: `${fontSize}px custard, sans-serif`,
-            lineWidth: window.innerWidth - 30
+            lineWidth: stage.canvas.width - 30
         })
-        text.x = this.props.stage.canvas.width / 2
+        text.x = stage.canvas.width / 2
         text.textAlign = 'center'
         this.container.addChild(text)
     }
 
     createLoadingBar = () => {
+        const { stage } = this.props
+
         let bar = new createjs.Shape()
-        let width = window.innerWidth / 4
-        let y = this.props.stage.canvas.height / 2
+        let width = stage.canvas.width / 4
+        let y = stage.canvas.height / 2
         bar.graphics.setStrokeStyle(3)
             .beginStroke('black')
-            .drawRoundRectComplex((window.innerWidth - width) / 2, y, width, 30, 5, 5, 5, 5)
+            .drawRoundRectComplex((stage.canvas.width - width) / 2, y, width, 30, 5, 5, 5, 5)
             .endStroke()
 
         let fill = new createjs.Shape()
             .set({
                 scaleX: 0,
-                x: (window.innerWidth - width) / 2 + 1.5,
+                x: (stage.canvas.width - width) / 2 + 1.5,
                 y: y + 1.5
             })
         fill.graphics
@@ -153,19 +167,21 @@ export default class Landing extends React.Component {
     }
 
     createTitle = () => {
+        const { stage } = this.props
+
         let textContainer = new createjs.Container()
-        let fontSize = window.innerHeight / 10
+        let fontSize = stage.canvas.height / 10
         let text = new createjs.Text().set({
             text: 'THE CARYATID REVOLUTION',
             x: 0,
             y: 0,
             font: `${fontSize}px custard, sans-serif`,
-            lineWidth: window.innerWidth - 30
+            lineWidth: stage.canvas.width - 30
         })
         textContainer.addChild(text)
         text.textAlign = 'center'
-        textContainer.x = this.props.stage.canvas.width / 2
-        textContainer.y = this.props.stage.canvas.height / 2 - this.props.stage.canvas.height / 5
+        textContainer.x = stage.canvas.width / 2
+        textContainer.y = stage.canvas.height / 2 - stage.canvas.height / 5
         this.container.addChild(textContainer)
     }
 

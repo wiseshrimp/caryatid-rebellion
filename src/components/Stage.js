@@ -108,8 +108,9 @@ class Stage extends React.Component {
   }
 
   onMouseDown = ev => {
+    // Touch events are deeper into the event object, the only thing wrong was that using ev.pageY returned undefined and the scroll function was getting NaN passed
     this.setState({
-      mouseY: ev.pageY
+      mouseY: ev.touches[0].pageY
     })
 
     document.getElementById('canvas').addEventListener('touchmove', this.onMouseMove)
@@ -117,7 +118,7 @@ class Stage extends React.Component {
   }
 
   onMouseMove = ev => {
-    this.scroll(this.state.y + (ev.pageY - this.state.mouseY) / 40)
+    this.scroll(this.state.y + (ev.touches[0].pageY - this.state.mouseY) / 40)
   }
 
   onMouseUp = ev => {
@@ -175,6 +176,8 @@ class Stage extends React.Component {
 
   setup = () => {
     this.stage = new createjs.Stage('canvas')
+    this.stage.snapToPixelEnabled = true
+    this.stage.snapToPixel = true
     let ctx = this.stage.canvas.getContext('2d')
     ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = ctx.imageSmoothingEnabled = true
     createjs.Touch.enable(this.stage)
@@ -250,9 +253,16 @@ class Stage extends React.Component {
     let currentPos = this.state.y / this.state.lowerBound
     this.stage.canvas.width = window.innerWidth
     this.stage.canvas.height = window.innerHeight
-    this.stage.scaleX = window.innerWidth / this.stage.canvas.width
-    this.stage.scaleY = window.innerHeight / this.stage.canvas.height
+     /* The issue with scaling was a tough one to crack. It is a canvas issue that browsers can't handle very well. Scaling an image distorts it. 
+     What I did was using your mobile check, then if in mobile I overset the canvas width and height with a 5:9 but the window width is the same.
+     This ends up using a smaller scale for the sprites ~ 0.42 instead of 0.21. Your calculations were not wrong, but with the smaller scale down,
+     the image is not as distorted as it was. and still fits.
+     TLDR: The canvas becomes bigger than the screen but everything is still fit to the screen **/
 
+    if (window.innerWidth < 600) {
+      this.stage.canvas.width = 700
+      this.stage.canvas.height = 1260
+    }
     if (this.state.hasLoaded) {
       setTimeout(() => {
         let lowerBound = this.calculateLowerBound()
@@ -271,18 +281,19 @@ class Stage extends React.Component {
   }
 
   render() {
+    const { popup, areButtonsShowing } = this.state
+    // Initially setting the canvas dimensions was causing a flicker for the first load after the browser calculated the dimensions.
     return (
       <div>
         <canvas 
           id="canvas" 
-          className={`${this.state.popup ? 'blurred' : ''}`}
-          width="640"
-          height="480"></canvas>
+          className={`${popup ? 'blurred' : ''}`}
+          ></canvas>
         <Buttons
-          showButtons={this.state.areButtonsShowing}
+          showButtons={areButtonsShowing}
           setPopup={this.setPopup}
         />
-        {this.state.popup ? this.renderPopup() : null}
+        {popup ? this.renderPopup() : null}
         {this.renderLanding()}
         {SPRITE_SHEETS.map(this.renderSprite)}
         {STILLS.map(this.renderStill)}
