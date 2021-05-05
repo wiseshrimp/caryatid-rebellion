@@ -40,7 +40,7 @@ const ABOUT_TEXT = {
 const VIDEO_TEXT = {
     header: 'WATCH THE REBELLION',
     html: `
-    <iframe src="https://player.vimeo.com/video/541132130" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    <iframe src="https://player.vimeo.com/video/544792816" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>    
     `
 }
 
