@@ -18,9 +18,10 @@ export default class Placard extends React.Component {
     }
 
     add = () => {
+        const { stage } = this.props;
         this.transform()
         this.addEventListener()
-        this.props.stage.addChild(this.spriteEl)
+        stage.addChild(this.spriteEl)
         this.play()
     }
 
@@ -33,16 +34,19 @@ export default class Placard extends React.Component {
     }
 
     handleLoad = sprite => {
+        const { handleLoad, id } = this.props
         this.spriteEl = new createjs.Sprite(sprite.result, this.id)
-        this.props.handleLoad(this.props.id)
+        handleLoad(id)
         this.add()
     }
 
     load = () => {
+        const { src, id } = this.props;
+
         let loader = new createjs.LoadQueue(false)
         let manifest = {
-            src: this.props.src,
-            id: this.props.id,
+            src: src,
+            id: id,
             type: 'spritesheet',
             crossOrigin: true
         }
@@ -55,20 +59,20 @@ export default class Placard extends React.Component {
     }
 
     transform = () => {
-        let {innerWidth, innerHeight} = window
-        let margin = window.innerWidth / 10 < MARGIN.x ? MARGIN.x : window.innerWidth / 10
+        const { stage, after, id, setTransform } = this.props;
+        let margin = stage.canvas.width / 10 < MARGIN.x ? MARGIN.x : stage.canvas.width / 10
         let transform = {x: 0, y: 0, w: 0, h: 0}
         let rectWidth = 1440
         let rectHeight = 200
-        let toResize = rectWidth + MARGIN.y * 2 > innerWidth
-        let isScreenSmall = window.innerWidth <= 600
-        transform.w = toResize ? innerWidth - margin : rectWidth
-        transform.w = isScreenSmall ? innerWidth : transform.w
+        let toResize = rectWidth + MARGIN.y * 2 > stage.canvas.width
+        let isScreenSmall = stage.canvas.width <= 600
+        transform.w = toResize ? stage.canvas.width - margin : rectWidth
+        transform.w = isScreenSmall ? stage.canvas.width : transform.w
         transform.h = (rectHeight / rectWidth) * transform.w
-        transform.x = (innerWidth - transform.w) / 2
+        transform.x = (stage.canvas.width - transform.w) / 2
         transform.x = isScreenSmall ? 0 : transform.x
         let cardHeight = transform.h * 2.4
-        let yOffset = this.props.after.idx * cardHeight + (this.props.after.idx + 1) * MARGIN.y * 2
+        let yOffset = after.idx * cardHeight + (after.idx + 1) * MARGIN.y * 2
         PLACARDS.forEach(placard => {
             let i = placard.id.split('_')
             let idx = Number(i[i.length - 1]) - 1
@@ -76,14 +80,14 @@ export default class Placard extends React.Component {
                 yOffset += transform.h + MARGIN.y * 2
             }
         })
-        transform.y = yOffset + innerHeight
+        transform.y = yOffset + stage.canvas.height
         let scale = transform.w / rectWidth
         this.spriteEl.setTransform(transform.x, transform.y, scale, scale)
         this.setState({
             transform
         })
-        if (this.props.id === FIRST_PLACARD) {
-            this.props.setTransform(transform, 'placards')
+        if (id === FIRST_PLACARD) {
+            setTransform(transform, 'placards')
         }
     }
 
