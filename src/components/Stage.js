@@ -42,15 +42,13 @@ class Stage extends React.Component {
   }
 
   componentWillUnmount = () => {
-    document.removeEventListener('mousewheel', this.scroll)
-    document.removeEventListener('DOMMouseScroll', this.scroll)
+    document.removeEventListener('wheel', this.scroll)
     window.removeEventListener('resize', this.resize)
     clearInterval(this.changeHue)
   }
 
   addEventListeners = () => {
-    document.addEventListener('mousewheel', this.onScroll)
-    document.addEventListener('DOMMouseScroll', this.onScroll)
+    document.addEventListener('wheel', this.onScroll)
     if (isTouchDevice()) {
       document.getElementById('canvas').addEventListener('touchend', this.onMouseUp)
       document.getElementById('canvas').addEventListener('touchstart', this.onMouseDown)  
