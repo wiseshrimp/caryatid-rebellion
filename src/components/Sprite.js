@@ -43,21 +43,24 @@ export default class Sprite extends React.Component {
 
     checkBounds = () => {
         // if (this.props.currentSprite) return
-        let {transform} = this.state
-        let isHeightBiggerThanScreen = transform.h > this.props.stage.canvas.height
+        // Use const for state declarations, since they should never be changed by assigning a new value ( setState )
+        // A good practice is declaring all props the same way you do with the state. Clears up the code and you do not have to repeat this.props... 
+        const { transform } = this.state
+        const { stage, y, currentSprite } = this.props
+        let isHeightBiggerThanScreen = transform.h > stage.canvas.height
         if (this.state.isPlaying) {
             if (isHeightBiggerThanScreen) {
-                if (-this.props.y < transform.y && -this.props.y > transform.y + transform.h) {
+                if (-y < transform.y && -y > transform.y + transform.h) {
                     this.stop()
                 }
-            } else if (transform.y < -this.props.y || transform.y + transform.h > -this.props.y + this.props.stage.canvas.height) {
+            } else if (transform.y < -y || transform.y + transform.h > -y + stage.canvas.height) {
                 this.stop()
             }
         } else {
-            if (!transform || this.state.hasPlayed || this.props.currentSprite) return
-            if (isHeightBiggerThanScreen && -this.props.y < transform.y && -this.props.y > transform.y + transform.h) {
+            if (!transform || this.state.hasPlayed || currentSprite) return
+            if (isHeightBiggerThanScreen && -y < transform.y && -y > transform.y + transform.h) {
                 this.play()
-            } else if (transform.y > -this.props.y && transform.y + transform.h < -this.props.y + this.props.stage.canvas.height) {
+            } else if (transform.y > -y && transform.y + transform.h < -y + stage.canvas.height) {
                 this.play()
             }
         }
@@ -147,20 +150,24 @@ export default class Sprite extends React.Component {
     }
 
     transform = () => {
-        let {innerWidth, innerHeight} = window
-        let margin = window.innerWidth / 10 < MARGIN.x ? MARGIN.x : window.innerWidth / 10
+        // Using window dimensions like this is considered a bad practice. Since they already are used for our canvas we can take them from there.
+        // I did this change whereever possible.
+        // Also even if you have to use them I would recommend that you save them in a variable and reuse that everywhere
+        // Here you had them saved but there were still checks with window.innerWidth which causes a browser reflow and can slow down the page
+        const { stage, id, setTransform } = this.props;
+        let margin = stage.canvas.width / 10 < MARGIN.x ? MARGIN.x : stage.canvas.width / 10
         let transform = {x: 0, y: 0, w: 0, h: 0}
         let rectWidth = 1440
         let rectHeight = 480
-        let toResize = rectWidth + MARGIN.y * 2 > innerWidth
-        let isScreenSmall = window.innerWidth <= 600
+        let toResize = rectWidth + MARGIN.y * 2 > stage.canvas.width
+        let isScreenSmall = stage.canvas.width <= 600
 
-        transform.w = toResize ? innerWidth - margin : rectWidth
-        transform.w = isScreenSmall ? innerWidth : transform.w
+        transform.w = toResize ? stage.canvas.width - margin : rectWidth
+        transform.w = isScreenSmall ? stage.canvas.width : transform.w
         transform.h = (rectHeight / rectWidth) * transform.w
-        transform.x = (innerWidth - transform.w) / 2
+        transform.x = (stage.canvas.width - transform.w) / 2
         transform.x = isScreenSmall ? 0 : transform.x
-        transform.y = innerHeight + transform.h * this.state.idx + MARGIN.y * 2 * (this.state.idx + 1)
+        transform.y = stage.canvas.height + transform.h * this.state.idx + MARGIN.y * 2 * (this.state.idx + 1)
         transform.y += this.calculateYOffset(transform.h)
         let scale = transform.w / rectWidth
         this.spriteEl.scaleX = scale
@@ -170,8 +177,8 @@ export default class Sprite extends React.Component {
         this.setState({
             transform
         })
-        if (this.props.id === FIRST_SPRITE) {
-            this.props.setTransform(transform, 'sprites')
+        if (id === FIRST_SPRITE) {
+            setTransform(transform, 'sprites')
         }
     }
 
