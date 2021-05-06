@@ -1,0 +1,88 @@
+{
+
+"images": [
+    "./sprites/card44/card44-0.png",
+    "./sprites/card44/card44-1.png",
+    "./sprites/card44/card44-2.png",
+    "./sprites/card44/card44-3.png",
+    "./sprites/card44/card44-4.png",
+    "./sprites/card44/card44-5.png",
+    "./sprites/card44/card44-6.png",
+    "./sprites/card44/card44-7.png"
+],
+
+"framerate": 20,
+"frames": [
+    [0, 0, 1440, 480, 0, 0, 0],
+    [0, 480, 1440, 480, 0, 0, 0],
+    [0, 960, 1440, 480, 0, 0, 0],
+    [0, 1440, 1440, 480, 0, 0, 0],
+    [0, 0, 1440, 480, 1, 0, 0],
+    [0, 480, 1440, 480, 1, 0, 0],
+    [0, 960, 1440, 480, 1, 0, 0],
+    [0, 1440, 1440, 480, 1, 0, 0],
+    [0, 0, 1440, 480, 2, 0, 0],
+    [0, 480, 1440, 480, 2, 0, 0],
+    [0, 960, 1440, 480, 2, 0, 0],
+    [0, 1440, 1440, 480, 2, 0, 0],
+    [0, 0, 1440, 480, 3, 0, 0],
+    [0, 480, 1440, 480, 3, 0, 0],
+    [0, 960, 1440, 480, 3, 0, 0],
+    [0, 1440, 1440, 480, 3, 0, 0],
+    [0, 0, 1440, 480, 4, 0, 0],
+    [0, 480, 1440, 480, 4, 0, 0],
+    [0, 960, 1440, 480, 4, 0, 0],
+    [0, 1440, 1440, 480, 4, 0, 0],
+    [0, 0, 1440, 480, 5, 0, 0],
+    [0, 480, 1440, 480, 5, 0, 0],
+    [0, 960, 1440, 480, 5, 0, 0],
+    [0, 1440, 1440, 480, 5, 0, 0],
+    [0, 0, 1440, 480, 6, 0, 0],
+    [0, 480, 1440, 480, 6, 0, 0],
+    [0, 960, 1440, 480, 6, 0, 0],
+    [0, 1440, 1440, 480, 6, 0, 0],
+    [0, 0, 1440, 480, 7, 0, 0],
+    [0, 480, 1440, 480, 7, 0, 0],
+    [0, 960, 1440, 480, 7, 0, 0]
+],
+
+"animations": {
+    "Still4400": { "frames": [0] },
+    "Still4401": { "frames": [1] },
+    "Still4402": { "frames": [2] },
+    "Still4403": { "frames": [3] },
+    "Still4404": { "frames": [4] },
+    "Still4405": { "frames": [5] },
+    "Still4406": { "frames": [6] },
+    "Still4407": { "frames": [7] },
+    "Still4408": { "frames": [8] },
+    "Still4409": { "frames": [9] },
+    "Still4410": { "frames": [10] },
+    "Still4411": { "frames": [11] },
+    "Still4412": { "frames": [12] },
+    "Still4413": { "frames": [13] },
+    "Still4414": { "frames": [14] },
+    "Still4415": { "frames": [15] },
+    "Still4416": { "frames": [16] },
+    "Still4417": { "frames": [17] },
+    "Still4418": { "frames": [18] },
+    "Still4419": { "frames": [19] },
+    "Still4420": { "frames": [20] },
+    "Still4421": { "frames": [21] },
+    "Still4422": { "frames": [22] },
+    "Still4423": { "frames": [23] },
+    "Still4424": { "frames": [24] },
+    "Still4425": { "frames": [25] },
+    "Still4426": { "frames": [26] },
+    "Still4427": { "frames": [27] },
+    "Still4428": { "frames": [28] },
+    "Still4429": { "frames": [29] },
+    "Still4430": { "frames": [30] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:99554f73769f6b6ffa647a8f79e1171b:0bad4df594724970309a1fdd744e475e:7af4a4afac8dd2c58c540064cea79eae$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}
