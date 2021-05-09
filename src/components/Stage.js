@@ -30,6 +30,7 @@ class Stage extends React.Component {
       loadedElements: 0,
       loaded: {sprites: 0, placards: 0}
     }
+    this.y = 0
   }
 
   componentDidMount() {
@@ -116,7 +117,8 @@ class Stage extends React.Component {
   }
 
   onMouseMove = ev => {
-    this.scroll(this.state.y + (ev.touches[0].pageY - this.state.mouseY) / 40)
+    let dy = this.state.y + (ev.touches[0].pageY - this.state.mouseY) / 40
+    this.scroll(dy)
   }
 
   onMouseUp = ev => {
@@ -154,10 +156,11 @@ class Stage extends React.Component {
       hasScrolled: true,
       y
     })
+    this.y = y
 
     createjs.Tween.get(this.stage, {override: true}).to({
         y
-    }, 100, createjs.Ease.sineOut)
+    }, 500, createjs.Ease.sineOut)
   }
 
   setCurrentSprite = currentSprite => {
