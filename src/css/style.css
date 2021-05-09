@@ -148,6 +148,10 @@ body {
     line-height: 22px;
 }
 
+.chunk {
+    margin: 20px 0;
+}
+
 .quote {
     font-family: 'study', serif;
     text-transform: uppercase;
@@ -160,6 +164,11 @@ h1 {
     font-family: 'custard', Arial, Helvetica, sans-serif;
     font-size: 30px;
     text-align: center;
+}
+
+h2 {
+    font-family: 'custard', Arial, Helvetica, sans-serif;
+    font-size: 30px;
 }
 
 #canvas.blurred {
