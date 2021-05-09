@@ -23,7 +23,7 @@ const AUDREY_TEXT = {
     </div>
 
     <br />
-    <h2>IN THE REBELLION</h2>
+    <h1>IN THE REBELLION</h2>
     <div class="chunk">
         During the Caryatid Rebellion, Audrey broke out of her marble cage on ${getDate()} and became ruler of the snakes, turning men into stone to live the fate that she and her sisters lived. You can watch her in the Rebellion as Alma Mater at Columbia University and Brian Tolle’s Miss Manhattan and Miss Brooklyn in Downtown Brooklyn.
     </div>

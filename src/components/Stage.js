@@ -111,6 +111,7 @@ class Stage extends React.Component {
     this.setState({
       mouseY: ev.touches[0].pageY
     })
+    // this.startTime = Date.now()
 
     document.getElementById('canvas').addEventListener('touchmove', this.onMouseMove)
 
@@ -118,11 +119,18 @@ class Stage extends React.Component {
 
   onMouseMove = ev => {
     let dy = this.state.y + (ev.touches[0].pageY - this.state.mouseY) / 40
+    // let power = this.y - dy < 0 ? 1 : -1
+    // let ds = power * Math.abs( (ev.touches[0].pageY - this.state.y) / window.innerHeight)
+    // this.ds = ds
     this.scroll(dy)
   }
 
   onMouseUp = ev => {
     document.getElementById('canvas').removeEventListener('touchmove', this.onMouseMove)
+    // let velocity = (this.y - this.state.mouseY) / (Date.now() - this.startTime)
+    // if (Math.abs(velocity) > 2) {
+    //   this.scroll(this.y + this.ds * Math.abs(velocity) * 20)
+    // }
   }
 
   onScroll = ev => {
