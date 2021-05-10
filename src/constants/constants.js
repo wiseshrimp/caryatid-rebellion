@@ -107,6 +107,14 @@ const SPRITE_SHEETS = [
     {
         id: 'CARD_49',
         src: './sprites/card50/card50.json'
+    },
+    {
+        id: 'CARD_50',
+        src: './sprites/card51/card51.json'
+    },
+    {
+        id: 'CARD_52',
+        src: './sprites/card53/card53.json'
     }
 ]
 
@@ -203,6 +211,18 @@ const STILLS = [
     {
         id: 'CARD_48',
         src: './stills/Still49.png'
+    },
+    {
+        id: 'CARD_51',
+        src: './stills/Still52.png'
+    },
+    {
+        id: 'CARD_53',
+        src: './stills/Still54.png'
+    },
+    {
+        id: 'CARD_54',
+        src: './stills/Still55.png'
     }
 ]
 
