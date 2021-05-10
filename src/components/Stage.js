@@ -28,9 +28,13 @@ class Stage extends React.Component {
       popup: null,
       lowerBound: 0,
       loadedElements: 0,
-      loaded: {sprites: 0, placards: 0}
+      loaded: {sprites: 0, placards: 0},
+      touchStartTimestamp: 0,
+      touchEndTimestamp: 0,
+      touchDirection: 0,
+      touchStartPosition: 0,
+      touchEndPosition: 0
     }
-    this.y = 0
   }
 
   componentDidMount() {
@@ -49,10 +53,11 @@ class Stage extends React.Component {
   }
 
   addEventListeners = () => {
-    document.addEventListener('wheel', this.onScroll)
     if (isTouchDevice()) {
       document.getElementById('canvas').addEventListener('touchend', this.onMouseUp)
       document.getElementById('canvas').addEventListener('touchstart', this.onMouseDown)  
+    } else {
+      document.addEventListener('wheel', this.onScroll)
     }
     window.addEventListener('resize', this.resize)
   }
@@ -109,28 +114,54 @@ class Stage extends React.Component {
   onMouseDown = ev => {
     // Touch events are deeper into the event object, the only thing wrong was that using ev.pageY returned undefined and the scroll function was getting NaN passed
     this.setState({
-      mouseY: ev.touches[0].pageY
+      mouseY: ev.touches[0].pageY,
+      touchStartTimestamp: ev.timeStamp,
+      touchStartPosition: ev.touches[0].pageY
     })
-    // this.startTime = Date.now()
 
     document.getElementById('canvas').addEventListener('touchmove', this.onMouseMove)
 
   }
 
   onMouseMove = ev => {
-    let dy = this.state.y + (ev.touches[0].pageY - this.state.mouseY) / 40
-    // let power = this.y - dy < 0 ? 1 : -1
-    // let ds = power * Math.abs( (ev.touches[0].pageY - this.state.y) / window.innerHeight)
-    // this.ds = ds
-    this.scroll(dy)
+    this.scroll(this.state.y + (ev.touches[0].pageY - this.state.mouseY))
+    this.setState({
+      mouseY: ev.touches[0].pageY,
+      touchDirection: ev.touches[0].pageY > this.state.mouseY ?  'down' : 'up',
+      touchEndPosition: ev.touches[0].pageY
+    })
   }
 
   onMouseUp = ev => {
+    this.setState({
+      touchEndTimestamp: ev.timeStamp,
+    })
+    const { y } = this.state
+    const eventLength = this.state.touchEndTimestamp - this.state.touchStartTimestamp
+    const pathLength = this.state.touchDirection === 'up' ? this.state.touchStartPosition - this.state.touchEndPosition : this.state.touchEndPosition - this.state.touchStartPosition
+    const canvasHeight = document.getElementById('canvas').offsetHeight;
+    const velocity = pathLength/eventLength;
+    const velocityScroll = canvasHeight * velocity;
+    let newScroll = 0
+    if (this.state.touchDirection === 'up') {
+      if(-(y - velocityScroll) > this.state.lowerBound && this.state.lowerBound) {
+        newScroll = -this.state.lowerBound
+      } else {
+        newScroll = y - velocityScroll
+      }
+    } else {
+      if (y + velocityScroll > 0) {
+        newScroll = 0
+      } else {
+        newScroll = y + velocityScroll
+      }
+    }
+    createjs.Tween.get(this.stage, {override: true}).to({
+        y: newScroll
+    }, 500, createjs.Ease.sineOut)
+    this.setState({y: newScroll})
     document.getElementById('canvas').removeEventListener('touchmove', this.onMouseMove)
-    // let velocity = (this.y - this.state.mouseY) / (Date.now() - this.startTime)
-    // if (Math.abs(velocity) > 2) {
-    //   this.scroll(this.y + this.ds * Math.abs(velocity) * 20)
-    // }
+
   }
 
   onScroll = ev => {
