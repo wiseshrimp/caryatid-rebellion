@@ -144,6 +144,7 @@ class Stage extends React.Component {
     })
     const { y } = this.state
     const eventLength = this.state.touchEndTimestamp - this.state.touchStartTimestamp
+    if (eventLength < 150) return
     const pathLength = this.state.touchDirection === 'up' ? this.state.touchStartPosition - this.state.touchEndPosition : this.state.touchEndPosition - this.state.touchStartPosition
     const canvasHeight = document.getElementById('canvas').offsetHeight;
     const velocity = pathLength/eventLength;
