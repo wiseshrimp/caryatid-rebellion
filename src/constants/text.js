@@ -58,6 +58,12 @@ const ABOUT_TEXT = {
     <br />
 
     <h1>CREDITS</h1>
+    <div>
+        Created by <a href="https://sueroh.com/work">Sue Roh</a><br />
+        Music by Violet June Ciavattone from <a href="https://machineplusel.bandcamp.com/">Machine+</a><br />
+        A big thanks to Nancy Hechinger, Dana Elkis, Arnab Chakravarty, Carla Gannis, Matt Romein, Clarinda MacLow, Katie Han, Lizzy Chiappini, Cezar Mocan, Dawn Sinkowski, Cy X, Simone Salvo, Sydney Meyers, Elizabeth Perez, Christina Dacanay, Rachel Costas, Cy Kim, Fernando Gregorio, and Nicole Cabalquinto <br />
+        <br />
+    </div>
     `
 }
 

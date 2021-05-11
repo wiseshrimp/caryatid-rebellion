@@ -91,6 +91,12 @@ class Stage extends React.Component {
     this.stage.update()
   }
 
+  exitPopup = ev => {
+    if (this.state.popup === null) {
+      console.log('sdfjkkl')
+    }
+  }
+
   isTouchDevice = () => {
     return (('ontouchstart' in window) ||
       (navigator.maxTouchPoints > 0) ||
