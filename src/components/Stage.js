@@ -56,6 +56,7 @@ class Stage extends React.Component {
     if (isTouchDevice()) {
       document.getElementById('canvas').addEventListener('touchend', this.onMouseUp)
       document.getElementById('canvas').addEventListener('touchstart', this.onMouseDown)  
+      document.addEventListener('wheel', this.onScroll)
     } else {
       document.addEventListener('wheel', this.onScroll)
     }
