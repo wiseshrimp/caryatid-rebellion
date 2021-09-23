@@ -1,15 +1,17 @@
-import './css/style.css'
-import './css/media.css'
+import './styles/style.css'
+import './styles/media.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Stage from './components/Stage'
 import reportWebVitals from './reportWebVitals'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Stage />
-  </React.StrictMode>,
-  document.getElementById('root')
+ReactDOM.render( <
+    React.StrictMode >
+    <
+    Stage / >
+    <
+    /React.StrictMode>,
+    document.getElementById('root')
 )
 
 // If you want to start measuring performance in your app, pass a function

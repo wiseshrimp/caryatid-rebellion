@@ -1,0 +1,12 @@
+@media only screen and (max-width: 850px) {
+    .button {
+        font-size: 15px;
+        height: 35px;
+    }
+}
+
+@media only screen and (min-width: 850px) {
+    #video {
+        min-width: 300px;
+    }
+}
